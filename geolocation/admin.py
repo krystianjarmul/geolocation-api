@@ -1,12 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    Language,
-    Currency,
-    Connection,
-    TimeZone,
-    Location,
-    Geolocation
+    Language, Currency, Connection, TimeZone, Location, Geolocation
 )
 
 admin.site.register(Language)

@@ -43,7 +43,7 @@ class TimeZone(models.Model):
 class Location(models.Model):
     geoname_id = models.IntegerField()
     capital = models.CharField(max_length=30)
-    languages = models.ManyToManyField(Language)
+    languages = models.ManyToManyField(Language, null=True)
     country_flag = models.CharField(max_length=100)
     country_flag_emoji = models.CharField(max_length=10)
     country_flag_emoji_unicode = models.CharField(max_length=30)
@@ -77,4 +77,4 @@ class Geolocation(models.Model):
     )
 
     def __str__(self):
-        return f"Geolocation for {self.ip}"
+        return f"Geolocation for IP: {self.ip}"
