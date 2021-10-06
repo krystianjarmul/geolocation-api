@@ -3,7 +3,7 @@ from django.test import TestCase
 from geolocation.models import Geolocation, Location, Language
 
 
-class TestGeolocationModel(TestCase):
+class GeolocationModelTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -57,7 +57,7 @@ class TestGeolocationModel(TestCase):
         )
 
 
-class TestLanguageModel(TestCase):
+class LanguageModelTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):

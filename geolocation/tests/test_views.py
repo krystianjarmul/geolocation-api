@@ -16,7 +16,7 @@ from .factories import (
 )
 
 
-class TestGeolocationAPI(APITestCase):
+class GeolocationAPITests(APITestCase):
 
     def setUp(self):
         self.language = LanguageFactory.create(id=3)
@@ -103,3 +103,15 @@ class TestGeolocationAPI(APITestCase):
         response = self.client.post(url, payload, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @mock.patch("requests.get", return_value=mock.Mock(status_code=500))
+    def test_authenticated_create_geolocation_ipstack_service_unavailable(
+            self, request_mock
+    ):
+        url = reverse("geolocation:geolocation-list")
+        payload = {"ip": faker.ipv4_public()}
+        authenticate_with_jwt(self.user, self.client)
+
+        response = self.client.post(url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

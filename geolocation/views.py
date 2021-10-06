@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,6 +9,7 @@ from .domain.geolocation import get_geolocation_data
 
 
 class GeolocationViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request):
         queryset = Geolocation.objects.all()
@@ -18,10 +19,15 @@ class GeolocationViewSet(viewsets.ViewSet):
     def create(self, request):
         payload_serializer = PayloadSerializer(data=request.data)
         if not payload_serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        data = get_geolocation_data(request.data)
-        location_data = data.get("location", {})
+            error_message = {"detail": "IP address is invalid."}
+            return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
 
+        data = get_geolocation_data(request.data)
+        if not data:
+            error_message = {"detail": "No data available."}
+            return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
+
+        location_data = data.get("location", {})
         location, _ = Location.objects.get_or_create(
             geoname_id=location_data.get("geoname_id"),
             capital=location_data.get("capital"),
