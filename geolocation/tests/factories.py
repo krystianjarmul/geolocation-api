@@ -1,9 +1,15 @@
 import factory
 from faker import Faker
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from geolocation.models import Geolocation, Location, Language
 
 faker = Faker()
+
+
+def authenticate_with_jwt(user, client):
+    refresh = RefreshToken.for_user(user)
+    client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
 
 
 class LanguageFactory(factory.django.DjangoModelFactory):
