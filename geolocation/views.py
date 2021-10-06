@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Geolocation, Language, Location
-from .serializers import GeolocationSerializer, LocationSerializer
+from .serializers import GeolocationSerializer, PayloadSerializer
 from .domain.geolocation import get_geolocation_data
 
 
@@ -16,6 +16,9 @@ class GeolocationViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        payload_serializer = PayloadSerializer(data=request.data)
+        if not payload_serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         data = get_geolocation_data(request.data)
         location_data = data.get("location", {})
 
@@ -39,9 +42,10 @@ class GeolocationViewSet(viewsets.ViewSet):
             )[0]
             for lang in location_data.get("languages", [])
         ]
+
         location.languages.set(languages)
 
-        geolocation, _ = Geolocation.objects.get_or_create(
+        geolocation = Geolocation.objects.create(
             ip=data.get("ip"),
             type=data.get("type"),
             continent_code=data.get("continent_code"),
