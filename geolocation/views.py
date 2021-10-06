@@ -51,7 +51,7 @@ class GeolocationViewSet(viewsets.ViewSet):
 
         location.languages.set(languages)
 
-        geolocation = Geolocation.objects.create(
+        geolocation, _ = Geolocation.objects.get_or_create(
             ip=data.get("ip"),
             type=data.get("type"),
             continent_code=data.get("continent_code"),

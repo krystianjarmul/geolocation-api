@@ -25,7 +25,7 @@ class Location(models.Model):
 
 
 class Geolocation(models.Model):
-    ip = models.CharField(max_length=30)
+    ip = models.CharField(max_length=30, unique=True)
     type = models.CharField(max_length=10)
     continent_code = models.CharField(max_length=10)
     continent_name = models.CharField(max_length=30)
