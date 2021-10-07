@@ -84,22 +84,13 @@ class GeolocationDetailView(
 
     def get(self, request, *args, **kwargs):
         geolocation = self.get_object()
-        if not geolocation:
-            error_message = {"Detail:": "Geolocation not found."}
-            return Response(
-                error_message, status.HTTP_404_NOT_FOUND
-            )
-
         serializer = self.get_serializer(geolocation)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         geolocation = self.get_object()
-        if not geolocation:
-            error_message = {"Detail:": "Geolocation not found."}
-            return Response(error_message, status.HTTP_404_NOT_FOUND)
 
         geolocation.delete()
 
-        error_message = {"Detail:": "Geolocation has been deleted!"}
-        return Response(error_message, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)

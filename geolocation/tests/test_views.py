@@ -2,6 +2,7 @@ from unittest import mock
 
 from django.urls import reverse
 from django.contrib.auth.models import User
+from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 from rest_framework import status
 
@@ -32,7 +33,7 @@ class GeolocationAPITests(APITestCase):
         location1 = LocationFactory.create(geoname_id=6757145)
         location1.languages.add(language1)
         GeolocationFactory.create(ip="101.0.86.43", location=location1)
-        url = reverse("geolocation:geolocation-list",)
+        url = reverse("geolocation:geolocation-list", )
         authenticate_with_jwt(self.user, self.client)
 
         response = self.client.get(url, format="json")
@@ -82,21 +83,21 @@ class GeolocationAPITests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_unauthenticated_list_geolocations_unsuccessfully(self):
+    def test_unauthenticated_list_geolocations_failed(self):
         url = reverse("geolocation:geolocation-list")
 
         response = self.client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_unauthenticated_retrieve_geolocation_unsuccessfully(self):
+    def test_unauthenticated_retrieve_geolocation_failed(self):
         url = reverse("geolocation:geolocation-detail", args=["133.11.93.0"])
 
         response = self.client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_unauthenticated_create_geolocation_unsuccessfully(self):
+    def test_unauthenticated_create_geolocation_failed(self):
         url = reverse("geolocation:geolocation-list")
         payload = {"ip": faker.ipv4_public()}
 
@@ -115,3 +116,26 @@ class GeolocationAPITests(APITestCase):
         response = self.client.post(url, payload, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_authenticated_delete_geolocation_successfully(self):
+        url = reverse("geolocation:geolocation-detail", args=["133.11.93.0"])
+        authenticate_with_jwt(self.user, self.client)
+
+        response = self.client.delete(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authenticated_delete_geolocation_not_exists(self):
+        url = reverse("geolocation:geolocation-detail", args=["123.61.13.1"])
+        authenticate_with_jwt(self.user, self.client)
+
+        response = self.client.delete(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_unauthenticated_delete_geolocation_failed(self):
+        url = reverse("geolocation:geolocation-detail", args=["133.11.93.0"])
+
+        response = self.client.delete(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
