@@ -28,10 +28,10 @@ class GeolocationAPITests(APITestCase):
         self.user = User.objects.create_user("testuser", "testpassword")
 
     def test_authenticated_list_geolocations_successfully(self):
-        language1 = LanguageFactory.create()
-        location1 = LocationFactory.create()
+        language1 = LanguageFactory.create(code="en")
+        location1 = LocationFactory.create(geoname_id=6757145)
         location1.languages.add(language1)
-        GeolocationFactory.create(location=location1)
+        GeolocationFactory.create(ip="101.0.86.43", location=location1)
         url = reverse("geolocation:geolocation-list")
         authenticate_with_jwt(self.user, self.client)
 
@@ -40,7 +40,7 @@ class GeolocationAPITests(APITestCase):
         geolocations = Geolocation.objects.all()
         serializer = GeolocationSerializer(geolocations, many=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['results'], serializer.data)
+        self.assertEqual(response.data, serializer.data)
 
     def test_authenticated_retrieve_geolocation_successfully(self):
         url = reverse("geolocation:geolocation-detail", args=[5])
