@@ -3,7 +3,9 @@ from http import HTTPStatus
 
 import requests
 
-if os.name == "nt":
+from core import settings
+
+if os.name == "nt" and settings.DEBUG:
     from dotenv import load_dotenv
 
     load_dotenv()

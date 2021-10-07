@@ -13,7 +13,7 @@ class GeolocationView(
 ):
     queryset = Geolocation.objects.all()
     serializer_class = GeolocationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         payload_serializer = PayloadSerializer(data=request.data)
