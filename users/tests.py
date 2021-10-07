@@ -14,7 +14,7 @@ class CreateUserTests(APITestCase):
 
         response = self.client.post(url, payload, format="json")
 
-        user = User.objects.get(id=1)
+        user = User.objects.first()
         serializer = UserSerializer(user)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, serializer.data)

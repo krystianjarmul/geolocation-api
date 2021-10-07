@@ -19,8 +19,8 @@ from .factories import (
 class GeolocationAPITests(APITestCase):
 
     def setUp(self):
-        self.language = LanguageFactory.create(id=3)
-        self.location = LocationFactory.create(id=4)
+        self.language = LanguageFactory.create()
+        self.location = LocationFactory.create()
         self.location.languages.add(self.language)
         self.geolocation = GeolocationFactory.create(
             id=5, location=self.location
@@ -40,7 +40,7 @@ class GeolocationAPITests(APITestCase):
         geolocations = Geolocation.objects.all()
         serializer = GeolocationSerializer(geolocations, many=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data['results'], serializer.data)
 
     def test_authenticated_retrieve_geolocation_successfully(self):
         url = reverse("geolocation:geolocation-detail", args=[5])

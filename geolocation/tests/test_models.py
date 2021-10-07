@@ -64,7 +64,7 @@ class LanguageModelTests(TestCase):
         Language.objects.create(code="en", name="English", native="English")
 
     def test_language_properties(self):
-        language = Language.objects.get(id=1)
+        language = Language.objects.first()
 
         self.assertEqual(language.code, "en")
         self.assertEqual(language.name, "English")
