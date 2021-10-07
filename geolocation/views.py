@@ -1,5 +1,4 @@
-from rest_framework import viewsets, permissions
-from rest_framework.generics import get_object_or_404
+from rest_framework import permissions, generics, mixins
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -8,15 +7,15 @@ from .serializers import GeolocationSerializer, PayloadSerializer
 from .domain.geolocation import get_geolocation_data
 
 
-class GeolocationViewSet(viewsets.ViewSet):
+class GeolocationView(
+    generics.ListAPIView,
+    mixins.CreateModelMixin
+):
+    queryset = Geolocation.objects.all()
+    serializer_class = GeolocationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def list(self, request):
-        queryset = Geolocation.objects.all()
-        serializer = GeolocationSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def create(self, request):
+    def post(self, request, *args, **kwargs):
         payload_serializer = PayloadSerializer(data=request.data)
         if not payload_serializer.is_valid():
             error_message = {"detail": "IP address is invalid."}
@@ -72,7 +71,35 @@ class GeolocationViewSet(viewsets.ViewSet):
             geolocation_serializer.data, status=status.HTTP_201_CREATED
         )
 
-    def retrieve(self, request, pk=None):
-        queryset = get_object_or_404(Geolocation, id=pk)
-        serializer = GeolocationSerializer(queryset)
+
+class GeolocationDetailView(
+    generics.GenericAPIView,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin
+):
+    queryset = Geolocation.objects.all()
+    serializer_class = GeolocationSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    lookup_field = "ip"
+
+    def get(self, request, *args, **kwargs):
+        geolocation = self.get_object()
+        if not geolocation:
+            error_message = {"Detail:": "Geolocation not found."}
+            return Response(
+                error_message, status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.get_serializer(geolocation)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        geolocation = self.get_object()
+        if not geolocation:
+            error_message = {"Detail:": "Geolocation not found."}
+            return Response(error_message, status.HTTP_404_NOT_FOUND)
+
+        geolocation.delete()
+
+        error_message = {"Detail:": "Geolocation has been deleted!"}
+        return Response(error_message, status=status.HTTP_200_OK)

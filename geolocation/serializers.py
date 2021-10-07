@@ -23,6 +23,7 @@ class GeolocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Geolocation
         fields = "__all__"
+        lookup_field = "ip"
 
 
 class PayloadSerializer(serializers.Serializer):

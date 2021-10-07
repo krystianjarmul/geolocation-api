@@ -1,9 +1,18 @@
-from rest_framework import routers
+from django.urls import path
 
-from .views import GeolocationViewSet
+from .views import GeolocationView, GeolocationDetailView
 
 app_name = "geolocation"
 
-router = routers.DefaultRouter()
-router.register("geolocations", GeolocationViewSet, basename="geolocation")
-urlpatterns = router.urls
+urlpatterns = [
+    path(
+        "geolocations/",
+        GeolocationView().as_view(),
+        name="geolocation-list"
+    ),
+    path(
+        "geolocations/<str:ip>",
+        GeolocationDetailView().as_view(),
+        name="geolocation-detail"
+    )
+]

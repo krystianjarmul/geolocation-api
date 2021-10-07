@@ -23,7 +23,7 @@ class GeolocationAPITests(APITestCase):
         self.location = LocationFactory.create()
         self.location.languages.add(self.language)
         self.geolocation = GeolocationFactory.create(
-            id=5, location=self.location
+            ip="133.11.93.0", location=self.location
         )
         self.user = User.objects.create_user("testuser", "testpassword")
 
@@ -32,7 +32,7 @@ class GeolocationAPITests(APITestCase):
         location1 = LocationFactory.create(geoname_id=6757145)
         location1.languages.add(language1)
         GeolocationFactory.create(ip="101.0.86.43", location=location1)
-        url = reverse("geolocation:geolocation-list")
+        url = reverse("geolocation:geolocation-list",)
         authenticate_with_jwt(self.user, self.client)
 
         response = self.client.get(url, format="json")
@@ -43,18 +43,18 @@ class GeolocationAPITests(APITestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_authenticated_retrieve_geolocation_successfully(self):
-        url = reverse("geolocation:geolocation-detail", args=[5])
+        url = reverse("geolocation:geolocation-detail", args=["133.11.93.0"])
         authenticate_with_jwt(self.user, self.client)
 
         response = self.client.get(url, format="json")
 
-        geolocations = Geolocation.objects.get(pk=5)
+        geolocations = Geolocation.objects.get(ip="133.11.93.0")
         serializer = GeolocationSerializer(geolocations)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
     def test_authenticated_retrieve_geolocation_not_exists(self):
-        url = reverse("geolocation:geolocation-detail", args=[12])
+        url = reverse("geolocation:geolocation-detail", args=["135.13.93.1"])
         authenticate_with_jwt(self.user, self.client)
 
         response = self.client.get(url, format="json")
@@ -90,7 +90,7 @@ class GeolocationAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthenticated_retrieve_geolocation_unsuccessfully(self):
-        url = reverse("geolocation:geolocation-detail", args=[5])
+        url = reverse("geolocation:geolocation-detail", args=["133.11.93.0"])
 
         response = self.client.get(url, format="json")
 
