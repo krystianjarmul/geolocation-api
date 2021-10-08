@@ -122,7 +122,7 @@ class GeolocationAPITests(APITestCase):
 
         response = self.client.delete(url, format="json")
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_authenticated_delete_geolocation_not_exists(self):
         url = reverse("geolocation:geolocation-detail", args=["123.61.13.1"])

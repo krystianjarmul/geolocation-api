@@ -13,6 +13,9 @@ COPY . ./
 RUN python manage.py collectstatic --noinput
 
 RUN adduser myuser
+RUN chmod 755 ./run_prod.sh
+RUN chown -R myuser:myuser ./run_prod.sh
+
 USER myuser
 
-CMD gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+CMD wait-for-it -t 15 -s $DATABASE_URL -- ./run_prod.sh

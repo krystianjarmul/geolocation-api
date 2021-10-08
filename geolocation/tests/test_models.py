@@ -1,26 +1,14 @@
 from django.test import TestCase
 
-from geolocation.models import Geolocation, Location, Language
+from geolocation.models import Geolocation, Language
+from geolocation.repository import create_geolocation
 
 
 class GeolocationModelTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        test_language = Language.objects.create(
-            code="en", name="English", native="English"
-        )
-        test_location = Location.objects.create(
-            geoname_id=5368361,
-            capital="Washington D.C.",
-            country_flag="https://testwebsitewithflags.com/usa",
-            country_flag_emoji="us",
-            country_flag_emoji_unicode="U+1F1FA U+1F1F8",
-            calling_code="1",
-            is_eu=False
-        )
-        test_location.languages.add(test_language)
-        Geolocation.objects.create(
+        test_data = dict(
             ip="134.201.250.155",
             type="ipv4",
             continent_code="NA",
@@ -33,8 +21,18 @@ class GeolocationModelTests(TestCase):
             zip="90013",
             latitude=34.0453,
             longitude=-118.2413,
-            location=test_location
+            location=dict(
+                geoname_id=5368361,
+                capital="Washington D.C.",
+                country_flag="https://testwebsitewithflags.com/usa",
+                country_flag_emoji="us",
+                country_flag_emoji_unicode="U+1F1FA U+1F1F8",
+                calling_code="1",
+                is_eu=False,
+                language=[dict(code="en", name="English", native="English"), ]
+            )
         )
+        create_geolocation(test_data)
 
     def test_geolocation_properties(self):
         geolocation = Geolocation.objects.get(id=1)

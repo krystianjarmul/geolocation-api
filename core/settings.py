@@ -10,12 +10,12 @@ SECRET_KEY = os.getenv(
     "SECRET_KEY",
     "django-insecure-3#ml5@n64^g&=!!h(gx9c5m2@_5q1577wzaxo$5qodk%j4w(6z"
 )
-DEBUG = os.getenv("DEBUG", True)
+DEBUG = os.getenv("DEBUG", False)
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "ipgeoappdemo.herokuapp.com"
+    "ipgeoapp.herokuapp.com",
 ]
 
 INSTALLED_APPS = [
@@ -71,12 +71,12 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT', 5432),
     },
 }
-if not DEBUG:
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    db_from_env = dj_database_url.config(
-        default=DATABASE_URL, conn_max_age=500, ssl_require=True
-    )
-    DATABASES['default'].update(db_from_env)
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+db_from_env = dj_database_url.config(
+    default=DATABASE_URL, conn_max_age=500, ssl_require=True
+)
+DATABASES['default'].update(db_from_env)
 
 AUTH_PASSWORD_VALIDATORS = [
     {

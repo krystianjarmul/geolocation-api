@@ -6,9 +6,7 @@ app_name = "geolocation"
 
 urlpatterns = [
     path(
-        "geolocations/",
-        GeolocationView().as_view(),
-        name="geolocation-list"
+        "geolocations/", GeolocationView().as_view(), name="geolocation-list"
     ),
     path(
         "geolocations/<str:ip>",
