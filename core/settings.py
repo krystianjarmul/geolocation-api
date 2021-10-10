@@ -3,6 +3,13 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+from celery.schedules import crontab
+from django.db import OperationalError
+
+if os.name == "nt":
+    from dotenv import load_dotenv
+
+    load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,10 +32,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'geolocation',
     'rest_framework',
     'rest_framework_simplejwt',
+    'geolocation',
+    'users',
+    'django_celery_beat',
 ]
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND_URL = os.getenv("CELERY_BACKEND", "redis://redis:6379/0")
+
+CELERY_BEAT_SCHEDULE = {
+    "backup": {
+        "task": "backup_task",
+        "schedule": crontab(minute="*/1"),
+    },
+    "load_dump": {
+        "task": "load_dump_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -46,7 +69,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,7 +141,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_SCHEMA_CLASS' : 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
