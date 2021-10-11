@@ -81,6 +81,7 @@ Existing user is **u: krystian p: password**, but feel free to create your own o
 
 ### Requirements
 * Docker
+* .env file
 
 ### Installation
 Clone the repo
@@ -91,6 +92,8 @@ go to project directory
 ```
 cd geolocation-api
 ```
+create .env file with require environment variables
+
 build and run docker containers
 ```
 docker-compose up --build
