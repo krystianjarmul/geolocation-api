@@ -92,3 +92,7 @@ build and run docker containers
 docker-compose up --build
 ```
 App is running under localhost:8000 
+
+### UML DB Entities
+
+![alt text](https://i.ibb.co/7SS7xdf/geolocation-this.png)
