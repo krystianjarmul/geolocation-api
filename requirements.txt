@@ -15,4 +15,3 @@ coreapi==2.3.3
 redis==3.5.3
 celery==5.1.2
 django-celery-beat==2.2.1
-coverage
