@@ -93,6 +93,12 @@ docker-compose up --build
 ```
 App is running under localhost:8000 
 
+To run unittests:
+```
+docker-compose exec api sh -c "python manage.py test"
+```
+
 ### UML DB Entities
 
 ![alt text](https://i.ibb.co/7SS7xdf/geolocation-this.png)
+
