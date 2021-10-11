@@ -4,7 +4,7 @@ from pathlib import Path
 
 import dj_database_url
 from celery.schedules import crontab
-from django.db import OperationalError
+
 
 if os.name == "nt":
     from dotenv import load_dotenv
@@ -45,11 +45,11 @@ CELERY_RESULT_BACKEND_URL = os.getenv("CELERY_BACKEND", "redis://redis:6379/0")
 CELERY_BEAT_SCHEDULE = {
     "backup": {
         "task": "backup_task",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute=0, hour="*/1"),
     },
     "load_dump": {
         "task": "load_dump_task",
-        "schedule": crontab(minute="*/1"),
+        "schedule": 10.0,
     },
 }
 

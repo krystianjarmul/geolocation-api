@@ -52,7 +52,8 @@ class LoadDumpTask(celery.Task):
             self.create_database("geodb")
             if os.path.isfile(DUMP_FILE_PATH):
                 self.load_dump()
-            return "Dump has been loaded."
+                return "Dump has been loaded."
+        return "Checks database status."
 
     @staticmethod
     def load_dump():
