@@ -4,7 +4,8 @@ The API is available under https://ipgeoapp.herokuapp.com
 
 coreapi docs: https://ipgeoapp.herokuapp.com/api/docs/
 
-To add Geolocation information to database, you'd like to do POST request with IP parameters in its body.
+List of IP addresses (you can use it as test data): https://www.dotcom-monitor.com/blog/technical-tools/network-location-ip-addresses/
+To add Geolocation information to database, you'd like to do POST request with IP parameter in its body.
 
 Example POST request body:
 ```
@@ -75,6 +76,9 @@ its response:
         "longitude": -93.66797637939453
     }
 ```
+
+Existing user is **u: krystian p: password**, but feel free to create your own one.
+
 ### Requirements
 * Docker
 
