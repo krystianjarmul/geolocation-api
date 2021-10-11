@@ -2,11 +2,11 @@
 
 The API is available under https://ipgeoapp.herokuapp.com/api/geolocations/
 
-coreapi docs: https://ipgeoapp.herokuapp.com/api/docs/
+auto-generated coreapi docs: https://ipgeoapp.herokuapp.com/api/docs/
 
 List of IP addresses (you can use it as test data): https://www.dotcom-monitor.com/blog/technical-tools/network-location-ip-addresses/
 
-To add Geolocation information to database, you'd like to do POST request with IP parameter in its body.
+To add geolocation information to database, you'd like to do POST request with IP parameter in its body.
 
 Example POST request body:
 ```
@@ -93,7 +93,7 @@ go to project directory
 ```
 cd geolocation-api
 ```
-create .env file with require environment variables
+create .env file with required environment variables
 
 build and run docker containers
 ```
