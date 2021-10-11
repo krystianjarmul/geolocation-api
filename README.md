@@ -1,6 +1,6 @@
 ## IP Geolocation API
 
-The API is available under https://ipgeoapp.herokuapp.com
+The API is available under https://ipgeoapp.herokuapp.com/api/geolocations/
 
 coreapi docs: https://ipgeoapp.herokuapp.com/api/docs/
 
